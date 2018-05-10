@@ -1,0 +1,68 @@
+1.CustomerValidatorRule：自定义注解处理器接口；
+2.CustomerRule:自定义规则注解；
+3.CustomerValidator：这个注解中没有任何内容，属于标记注解；
+4.DateString：自定义 日期类型校验器的注解；
+5.AbastractCustomerValidatorRule:自定义注解校验规则抽象类；
+6.CustomerValidatorConfig：自定义校验器配置；
+7.CustomerValidatorFactory:校验器工厂；
+8.DateValidatorRule：日期校验规则；
+9.Form：bean；
+10.DemoTest：测试demo；
+
+注解demo流程：
+DemoTest运行方法：customerValidatorFactory.validate(form, errors)，
+form是一个带有时间字符串内容的bean，接着我们进入到validate方法里面:validate方法会遍历form的每个属性，然后判断这些属性有没有带CustomerValidator的注释，如果有，那么会查询出它需要校验的规则：
+CustomerValidatorRule customerValidatorRule = customerValidatorConfig.findRule(annotation);
+而bean form的属性current是带有@DateString的注解，而且DateString带有@CustomerValidator的注解，
+则肯定会进到这个寻找校验规则这个方法里面来，
+（##打标001##）
+接着我们先进入findRule这个方法看看它是如何利用参数CustomerValidator这个注解作为参数，查询出规则来的，该方法是从一个关联的customerValidationRules中查询需要的规则，而customerValidationRules的数据来源是：
+applicationContext.getBeansWithAnnotation(CustomerRule.class)
+可以看到DateValidatorRule是加了@CustomerRule的注解，而且实现了CustomerValidatorRule接口，所以这里可以获取到DateValidatorRule这个校验规则，然后通过
+rules.put(annotation, cvr)
+把CustomerValidator注解跟校验规则关联起来，代码如下：
+——————————————————————————————————————————————————————————————————————————
+if (!rules.containsKey(annotation)) {
+            CustomerValidatorRule cvr = findFormMap(annotation);
+            if (cvr != null) {
+                rules.put(annotation, cvr);
+            }
+            customerValidatorRule = cvr;
+        }
+——————————————————————————————————————————————————————————————————————————
+回到（##打标001##）处，这里获取了规则CustomerValidatorRule类后，接着会进行规则的校验，
+customerValidatorRule.valid(annotation, target, field, errors)
+进入到这个规则方法里面来：
+--------------------------------------------------------------------------
+validProperty(annotation, property, new PostHandler() {
+            public void postHanle(String errorCode, String message) {
+                errors.rejectValue(field.getName(), errorCode, message);
+            }
+        });
+--------------------------------------------------------------------------
+这里校验的逻辑是：使用DateString注解时定义的正则pattern（默认是：yyyy-MM-dd HH:mm:ss）对form bean的属性进行格式化，如果格式化没有异常，则说明这个数字是正确的，否则说明会发生异常，返回内容为空，并且校验的错误会记录下来，校验的代码如下：
+--------------------------------------------------------------------------
+		DateString ds = (DateString) annotation;
+        if (parse(ds.pattern(), (String) property) == null) {
+            postHandler.postHanle(ds.errorCode(), ds.message());
+        }
+		
+		private Date parse(String pattern, String property) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+            return sdf.parse(property);
+        } catch (ParseException e) {
+            //do noting
+        }
+        return null;
+    }
+——————————————————————————————————————————————————————————————————————————
+记录下来异常后，回到最初demoTest类里面来，把异常打印出来：System.out.println(errors.getFieldErrors())
+至此，整个过程已经完成！
+
+
+
+
+
+
+
