@@ -1,0 +1,11 @@
+heading-netty介绍：
+
+netty demo：
+1.heading\heading-netty\src\main\java\com\vi\example1
+实现了简单的客户端-服务端应答，控制台输入任意数字，服务端计算后返回结果；
+
+
+
+
+
+
