@@ -21,5 +21,15 @@
           <artifactId>netty-all</artifactId>
           <version>4.1.24.Final</version>
       </dependency>
+      <dependency>
+          <groupId>commons-httpclient</groupId>
+          <artifactId>commons-httpclient</artifactId>
+          <version>3.1</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpcore</artifactId>
+          <version>4.3.3</version>
+      </dependency>
   </dependencies>
 </project>

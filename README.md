@@ -10,6 +10,10 @@ for study
 3.heading-thread：多线程学习；
 4.heading-design：设计模式的学习；
 4.1 代理设计模式,路径com\vi\design\proxy；
+5.heading-netty:netty的demo
+5.1 实现简单的netty应答；
+5.2 实现netty http服务端和netty http客户端和非netty的http客户端请求应答；
+
 
 
 
