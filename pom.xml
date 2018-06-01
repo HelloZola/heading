@@ -9,6 +9,9 @@
 	  <module>heading-thread</module>
 	  <module>heading-spring</module>
 	  <module>heading-core</module>
+	  <module>heading-debugger</module>
+	  <module>heading-design</module>
+	  <module>heading-netty</module>
   </modules>
   <properties>
   		<!-- JDK版本号 -->
