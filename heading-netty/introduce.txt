@@ -4,6 +4,9 @@ netty demo：
 1.heading\heading-netty\src\main\java\com\vi\example1
 实现了简单的客户端-服务端应答，控制台输入任意数字，服务端计算后返回结果；
 
+1.heading\heading-netty\src\main\java\com\vi\example2实现了http服务端和客户端；
+其中客户端有用到了netty包，也有不用netty包；
+
 
 
 
