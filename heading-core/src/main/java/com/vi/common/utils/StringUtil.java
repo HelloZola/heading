@@ -64,7 +64,7 @@ public class StringUtil{
 	}
 	
 	/**
-	 * 判断字符串不为空
+	 * 判断字符串不为null
 	 * @param string
 	 * @return
 	 */
