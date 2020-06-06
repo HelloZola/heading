@@ -59,7 +59,7 @@ public class StringUtil{
 		Random random = new Random();
 		int randVal = random.nextInt(max);
 		String suffix_id = String.format("%0" + n + "d", randVal);//0 代表前面补充0 3 代表长度为3 d代表参数为正数型
-		
+		//前缀和补充字符
 		return (prefix_id + suffix_id);
 	}
 	
