@@ -9,7 +9,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     ChannelHandlerContext ctx;  
     /** 
-     * tcp链路简历成功后调用 
+     * tcp链路连接成功后调用
      */  
     @Override  
     public void channelActive(ChannelHandlerContext ctx) throws Exception {  
@@ -23,7 +23,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         m.writeBytes(req);  
         ctx.writeAndFlush(m);  
         return msg.equals("q")?false:true;  
-    }  
+    }
+
     /** 
      * 收到服务器消息后调用 
      * @throws UnsupportedEncodingException
@@ -35,7 +36,8 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         buf.readBytes(req);  
         String body = new String(req,"utf-8");  
         System.out.println("服务器消息："+body);  
-    }  
+    }
+
     /** 
      * 发生异常时调用 
      */  

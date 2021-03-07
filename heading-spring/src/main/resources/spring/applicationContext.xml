@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:aop="http://www.springframework.org/schema/aop" 
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
          http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context-3.0.xsd
@@ -17,8 +17,60 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd
         ">
 
-	<mvc:annotation-driven />
-	<!-- 开启AOP监听 只对当前配置文件有效 -->
-	<context:component-scan base-package="com.cn.myspring.controller"></context:component-scan>
+    <mvc:annotation-driven/>
+    <!-- 开启AOP监听 只对当前配置文件有效 -->
+    <context:component-scan base-package="com.cn.myspring.controller"></context:component-scan>
+
+    <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean"/>
+
+    <!--配置扫描的包-->
+    <!--<context:component-scan base-package="com.otc"/>-->
+    <!--数据库连接池-->
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+        <!--<property name="driverClassName" value="com.mysql.jdbc.Driver"/>-->
+        <!--<property name="url" value="jdbc:mysql://localhost:3306/db4vi?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=GMT%2B8&amp;useSSL=false"/>-->
+        <!--<property name="username" value="root"/>-->
+        <!--<property name="password" value="chenkangliu"/>-->
+    <!--</bean>-->
+    <!--分布式配置-->
+    <!--配置线程池-->
+    <bean name="executor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="15"/>
+        <property name="maxPoolSize" value="25"/>
+        <property name="queueCapacity" value="100"/>
+    </bean>
+
+    <!--配置事务管理器-->
+    <!--<bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+    <!--</bean>-->
+
+    <!--定义调度器,并将Trigger注册到调度器中-->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!--配置文件-->
+        <property name="configLocation" value="classpath:spring/quartz.properties"/>
+        <!--数据源-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+        <!--任务唯一的名称,将持久化到数据库-->
+        <!--<property name="schedulerName" value="mavenTest2"/>-->
+        <!--每台集群机器部署应用的时候更新触发器-->
+        <property name="overwriteExistingJobs" value="true"/>
+        <property name="applicationContextSchedulerContextKey" value="appl"/>
+        <!-- 设置自动启动 -->
+        <property name="autoStartup" value="true"/>
+        <!--线程池-->
+        <property name="taskExecutor" ref="executor"/>
+        <!--事务-->
+        <!--<property name="transactionManager" ref="transactionManager"/>-->
+
+        <!--<property name="triggers">-->
+        <!--<list>-->
+        <!--<ref bean="cronTrigger_1"/>-->
+        <!--<ref bean="cronTrigger_2"/>-->
+        <!--<ref bean="cronTrigger_3"/>-->
+        <!--</list>-->
+        <!--</property>-->
+    </bean>
+
 
 </beans>  

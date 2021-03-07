@@ -11,8 +11,8 @@ public class TimeServer {
 
     public void bind(int port) throws Exception {
         // 配置服务端的NIO，循环事件线程组
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup();//处理登录的Reactor
+        EventLoopGroup workerGroup = new NioEventLoopGroup();//处理读写的Reactor
         try {
             ServerBootstrap b = new ServerBootstrap();//配置类
             //NioServerSocketChannel作为channel类，它的功能对应于JDK NIO类库中的ServerSocketChannel
