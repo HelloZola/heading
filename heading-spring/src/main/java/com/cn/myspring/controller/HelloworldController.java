@@ -11,10 +11,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/HelloworldController")
@@ -27,9 +27,11 @@ public class HelloworldController {
     @Qualifier(value = "scheduler")
     private SchedulerFactoryBean schedulerFactoryBean;
 
+    private static String jobNameGrobal = "";
+
 
     /**
-     * test绫�
+     * test demo
      * http://localhost:8080/heading-spring/HelloworldController/helloworld.do
      *
      * @return
@@ -49,7 +51,62 @@ public class HelloworldController {
                 @Override
                 public void run() {
                     try {
-                        quartzDemo2();
+                        addJob();
+                    } catch (SchedulerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return model;
+    }
+
+    @RequestMapping("/helloworld2")
+    public ModelAndView hello2() {
+        System.out.println("helloworld2****************************");
+        System.out.println("helloworld2****************************");
+        System.out.println("helloworld2****************************");
+        System.out.println("helloworld2****************************");
+        userService.addUser();
+        ModelAndView model = new ModelAndView();
+        model.addObject("fsfsdfdsf");
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        updateJob();
+                    } catch (SchedulerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return model;
+    }
+
+
+    @RequestMapping("/helloworld3")
+    public ModelAndView hello3() {
+        System.out.println("helloworld2****************************");
+        System.out.println("helloworld2****************************");
+        System.out.println("helloworld2****************************");
+        System.out.println("helloworld2****************************");
+        userService.addUser();
+        ModelAndView model = new ModelAndView();
+        model.addObject("fsfsdfdsf");
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        deleteJob();
                     } catch (SchedulerException e) {
                         e.printStackTrace();
                     }
@@ -64,11 +121,12 @@ public class HelloworldController {
 
 
     @Test
-    public void quartzDemo2() throws SchedulerException {
+    public void addJob() throws SchedulerException {
 
         String JobName = "chensjob" + System.currentTimeMillis();
+        jobNameGrobal = JobName;
         String JobGroup = "chensJobGroup";
-        String cronExpression = "0/10 * * * * ?";
+        String cronExpression = "0/12 * * * * ?";
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
@@ -80,10 +138,53 @@ public class HelloworldController {
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
 
         CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(JobName, JobGroup).withSchedule(scheduleBuilder).build();
+
+        Map<String, Object> argMap = new HashMap<>();
+        argMap.put("ky", "chen");
+        if (argMap != null) {
+            trigger.getJobDataMap().putAll(argMap);
+        }
+
         scheduler.scheduleJob(jobDetail, trigger);
+    }
 
-        while (true) {
+    public void updateJob() throws SchedulerException {
 
+        try {
+            String jobName = this.jobNameGrobal;
+            String jobGroupName = "chensJobGroup";
+            String cronExpression = "0/10 * * * * ?";
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+
+            TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroupName);
+            // 表达式调度构建器
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
+            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+            // 按新的cronExpression表达式重新构建trigger
+            trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+            //修改map
+//            if (argMap != null) {
+//                trigger.getJobDataMap().putAll(argMap);
+//            }
+            // 按新的trigger重新设置job执行
+            scheduler.rescheduleJob(triggerKey, trigger);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void deleteJob() throws SchedulerException {
+
+        try {
+            String jobName = this.jobNameGrobal;
+            String jobGroupName = "chensJobGroup";
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            scheduler.pauseTrigger(TriggerKey.triggerKey(jobName, jobGroupName));
+            scheduler.unscheduleJob(TriggerKey.triggerKey(jobName, jobGroupName));
+            scheduler.deleteJob(JobKey.jobKey(jobName, jobGroupName));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
