@@ -1,6 +1,5 @@
 package junit.test;
 
-import com.alibaba.fastjson.JSONObject;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;

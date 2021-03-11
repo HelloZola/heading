@@ -119,6 +119,60 @@ public class HelloworldController {
         return model;
     }
 
+    @RequestMapping("/helloworld4")
+    public ModelAndView hello4() {
+        System.out.println("helloworld4****************************");
+        System.out.println("helloworld4****************************");
+        System.out.println("helloworld4****************************");
+        System.out.println("helloworld4****************************");
+        userService.addUser();
+        ModelAndView model = new ModelAndView();
+        model.addObject("fsfsdfdsf");
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        pauseJob();
+                    } catch (SchedulerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return model;
+    }
+
+    @RequestMapping("/helloworld5")
+    public ModelAndView hello5() {
+        System.out.println("helloworld5****************************");
+        System.out.println("helloworld5****************************");
+        System.out.println("helloworld5****************************");
+        System.out.println("helloworld5****************************");
+        userService.addUser();
+        ModelAndView model = new ModelAndView();
+        model.addObject("fsfsdfdsf");
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        resumeJob();
+                    } catch (SchedulerException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return model;
+    }
+
 
     @Test
     public void addJob() throws SchedulerException {
@@ -127,6 +181,7 @@ public class HelloworldController {
         jobNameGrobal = JobName;
         String JobGroup = "chensJobGroup";
         String cronExpression = "0/12 * * * * ?";
+//        String cronExpression = "0 0/2 * * * ? ";
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
@@ -144,7 +199,7 @@ public class HelloworldController {
         if (argMap != null) {
             trigger.getJobDataMap().putAll(argMap);
         }
-
+//        scheduler.addJob(jobDetail,true);
         scheduler.scheduleJob(jobDetail, trigger);
     }
 
@@ -153,7 +208,7 @@ public class HelloworldController {
         try {
             String jobName = this.jobNameGrobal;
             String jobGroupName = "chensJobGroup";
-            String cronExpression = "0/10 * * * * ?";
+            String cronExpression = "0 0/3 * * * ? ";
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
             TriggerKey triggerKey = TriggerKey.triggerKey(jobName, jobGroupName);
@@ -183,6 +238,34 @@ public class HelloworldController {
             scheduler.pauseTrigger(TriggerKey.triggerKey(jobName, jobGroupName));
             scheduler.unscheduleJob(TriggerKey.triggerKey(jobName, jobGroupName));
             scheduler.deleteJob(JobKey.jobKey(jobName, jobGroupName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    public void pauseJob() throws SchedulerException {
+
+        try {
+            String jobName = this.jobNameGrobal;
+            String jobGroupName = "chensJobGroup";
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            scheduler.pauseTrigger(TriggerKey.triggerKey(jobName, jobGroupName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Test
+    public void resumeJob() throws SchedulerException {
+
+        try {
+            String jobName = this.jobNameGrobal;
+            String jobGroupName = "chensJobGroup";
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            scheduler.resumeTrigger(TriggerKey.triggerKey(jobName, jobGroupName));
         } catch (Exception e) {
             e.printStackTrace();
         }
