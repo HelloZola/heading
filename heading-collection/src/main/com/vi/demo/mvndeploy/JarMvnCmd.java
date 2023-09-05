@@ -1,4 +1,4 @@
-package com.vi.demo;
+package com.vi.demo.mvndeploy;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -8,75 +8,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CollectionDemo {
-
-
-    @Test
-    public void test1() {
-
-        HashMap map = new HashMap();
-        Hashtable table = new Hashtable();
-
-        //map.put(null, null);
-        //table.put(null, null);
-    }
-
-
-    @Test
-    public void printMvnCmd() {
-
-        String fileName = "";
-        String groupId = "";
-        String artifactId = "";
-        String version = "";
-        String packaging = "";
-        String repositoryId = "";
-        String url = "";
-        if (false) {
-            fileName = "javafx-18-ea+2.pom";
-            groupId = "org.openjfx";
-            artifactId = "javafx";
-            version = "18-ea+2";
-            packaging = "pom";
-            repositoryId = "maven-releases";
-            url = "http://127.0.0.1:8082/repository/maven-releases/";
-        }
-        if (false) {
-            fileName = "javafx-18-ea+2.pom";
-            groupId = "org.openjfx";
-            artifactId = "javafx";
-            version = "18-ea+2";
-            packaging = "pom";
-            repositoryId = "maven-snapshots";
-            url = "http://127.0.0.1:8082/repository/maven-snapshots/";
-        }
-
-        if (true) {
-            fileName = "org.eclipse.e4.core.services-2.0.100.jar";
-            groupId = "org.eclipse.platform";
-            artifactId = "org.eclipse.e4.core.services";
-            version = "2.0.100";
-            packaging = "jar";
-            repositoryId = "maven-releases";
-            url = "http://127.0.0.1:8082/repository/maven-releases/";
-        }
-
-
-        String cmd = "mvn deploy:deploy-file -Dfile=" + fileName + " -DgroupId=" + groupId + " -DartifactId=" + artifactId + " -Dversion=" + version + " -Dpackaging=" + packaging + " -DrepositoryId=" + repositoryId + " -Durl=" + url + "";
-        System.out.println(cmd);
-
-    }
+public class JarMvnCmd {
 
     @Test
     public void findOutAllJar() {
 
-        String repoPath = "G:\\maven\\repository_test";
+        String repoPath = "G:\\maven\\repository_test_sync";
         File file1 = new File(repoPath);
-        //判断是否有目录
         if (file1.isDirectory()) {
-            //获取目录中的所有文件名称
             String[] fileNames = file1.list();
             for (String filename : fileNames) {
                 cycleDir(repoPath + "\\" + filename);
@@ -105,7 +47,7 @@ public class CollectionDemo {
     }
 
     private static void fileHandle(File path) {
-        if (path.getName().endsWith(".jar")) {
+        if (path.getName().endsWith(".jar") || path.getName().endsWith(".pom")) {
             String allpath = path.getPath();
             String[] allpaths = allpath.split("\\\\");
             String version = allpaths[allpaths.length - 1 - 1];
@@ -145,6 +87,9 @@ public class CollectionDemo {
     private static void privateMvnCmd(String fileName, String groupId, String artifactId, String version) {
 
         String packaging = "jar";
+        if (fileName.endsWith(".pom")) {
+            packaging = "pom";
+        }
         String repositoryId = "maven-releases";
         String url = "http://127.0.0.1:8082/repository/maven-releases/";
 
@@ -176,18 +121,4 @@ public class CollectionDemo {
     }
 
 
-    @Test
-    public void testMain() {
-        try {
-            FileUtils.copyFile(new File("E:\\eclipse-projects\\datastudio300\\DataStudio\\dest-jar\\11.txt"), new File("E:\\eclipse-projects\\datastudio300\\DataStudio\\dest-jar\\11.txt2"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-
-    }
 }
-
-
