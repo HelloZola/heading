@@ -6,13 +6,13 @@
   <packaging>pom</packaging>
   <name>heading-parent</name>
   <modules>
-	  <module>heading-thread</module>
-	  <module>heading-spring</module>
-	  <module>heading-core</module>
-	  <module>heading-debugger</module>
-	  <module>heading-design</module>
-	  <module>heading-netty</module>
-	  <module>heading-collection</module>
+	  <module>train-thread</module>
+	  <module>train-spring</module>
+	  <module>train-core</module>
+	  <module>train-debugger</module>
+	  <module>train-design</module>
+	  <module>train-netty</module>
+	  <module>train-collection</module>
   </modules>
   <properties>
   		<!-- JDK版本号 -->
@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-asm</artifactId>
-			<version>${spring.version}</version>
+			<version>3.1.4.RELEASE</version>
 		</dependency>
 
 		<dependency>
